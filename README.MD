@@ -55,3 +55,13 @@ Kafka itself does not need much heap **memory** configured for the JVM. For most
 The available **network throughput** will specify the maximum amount of traffic that Kafka can handle. This is complicated by the inherent imbalance between inbound and outbound network usage that is created by Kafka’s support for multiple consumers.
 
 **CPU** is not as important as disk and memory and should not be the primary factor in selecting hardware. The majority of Kafka’s requirement for processing power comes from decompressing and recompressing messages, alongside checksum validation.
+
+#### AWS
+
+For [AWS EC2](https://aws.amazon.com/ru/ec2/instance-types) either the `m4` or `r3` instance types are a common choice. 
+
+The `m4` instance will allow for *greater retention periods, but the throughput to the disk will be less* because it is on elastic block storage. 
+
+The `r3` instance will have *much better throughput* with local SSD drives, but those drives will *limit the amount of data that can be retained*. 
+
+For the best of both worlds, it is necessary to move up to either the `i2` or `d2` instance types, which are significantly more expensive.
