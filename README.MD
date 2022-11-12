@@ -35,3 +35,23 @@
 | `log.segment.bytes`   | Once a log segment has reached that size (1GB by default), it'll be closed.               |
 | `log.segment.ms`      | Once a log segment size limit is reached, it'll be closed.                                |
 | `message.max.bytes`   | Limits the maximum size of a message that can be produced. By default, it's 1MB.          |
+
+### Hardware Selection
+
+Once performance becomes a concern, there are several factors that will contribute to it: 
+
+- disk throughput,
+- disk capacity,
+- memory,
+- networking,
+- CPU.
+
+The performance of producer clients most directly influenced by the **disk throughput**. Kafka message must be committed by at least one broker before considering the send successful. This means *the faster disk the lower produce latency*.
+
+The amount of **disk capacity** that is needed is determined by how many messages need to be retained. You should also factor in at least 10% overhead for other files, in addition to any buffer that you wish to maintain for fluctuations in traffic or growth over time.
+
+Kafka itself does not need much heap **memory** configured for the JVM. For most of the cases 5GB is enough. The rest will be used by the page cache. Having more memory available to the system for [page cache](https://en.wikipedia.org/wiki/Page_cache) will improve the performance of consumer clients by allowing the system to cache log segments in use.
+
+The available **network throughput** will specify the maximum amount of traffic that Kafka can handle. This is complicated by the inherent imbalance between inbound and outbound network usage that is created by Kafka’s support for multiple consumers.
+
+**CPU** is not as important as disk and memory and should not be the primary factor in selecting hardware. The majority of Kafka’s requirement for processing power comes from decompressing and recompressing messages, alongside checksum validation.
